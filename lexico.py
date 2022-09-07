@@ -1,3 +1,5 @@
+import lex
+
 keywords = {
   'class':'class',
   'else': 'else',
@@ -19,7 +21,6 @@ keywords = {
   'not':'not',
   'true':'true'
 }
-
 
 tokens = [
   'ID',
@@ -85,3 +86,27 @@ def t_NOVALINHA(t):
 def t_error(t):
     print(f'Caractere ilegal {t.value[0]!r}')
     t.lexer.skip(1)
+
+###################################################
+
+data = '''
+class Main inherits IO {
+    main(): Object {
+        let hello:String <- "Hello, ",
+            name: String <- "",
+            ending: String <- "!\n"
+        in {
+            out_string("Please enter your name:\n");
+            name <- in_string();
+            out_string(hello.concat(name.concat(ending)));
+        }
+    };
+};'''
+
+lexer = lex.lex()
+lexer.input(data)
+while True:
+  tok = lexer.token()
+  if not tok:
+    break
+  print(tok)
