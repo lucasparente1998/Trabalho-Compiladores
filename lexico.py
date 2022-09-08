@@ -85,7 +85,7 @@ def t_COMMENT_BLOCO (t):
 
 def t_COMMENT_LINHA (t):
     r'\-\-[^-][^-]*\-\-'
-
+    
 def t_NOVALINHA(t):
 	r'\n+'
 	t.lexer.lineno += len(t.value)
@@ -95,7 +95,8 @@ def t_error(t):
     t.lexer.skip(1)
 
 ###################################################
-arquivo = open('programa.cl', 'r')
+nome = input("Insira o nome do arquivo:\n")
+arquivo = open(nome, 'r')
 data = arquivo.read()
 arquivo.close()
 
