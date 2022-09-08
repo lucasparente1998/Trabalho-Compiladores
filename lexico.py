@@ -22,6 +22,7 @@ keywords = {
   'true':'true'
 }
 
+
 tokens = [
   'ID',
   'NUMERO',
@@ -76,8 +77,14 @@ def t_NUMERO(t):
 	return t
 
 def t_STRING(t):
-    r'\"[\w_\W]*\"'
+    r'\"[^"]*\"'
     return t
+
+def t_COMMENT_BLOCO (t):
+    r'\(\*[^*][^)]*\*\)'
+
+def t_COMMENT_LINHA (t):
+    r'\-\-[^-][^-]*\-\-'
 
 def t_NOVALINHA(t):
 	r'\n+'
@@ -88,20 +95,9 @@ def t_error(t):
     t.lexer.skip(1)
 
 ###################################################
-
-data = '''
-class Main inherits IO {
-    main(): Object {
-        let hello:String <- "Hello, ",
-            name: String <- "",
-            ending: String <- "!\n"
-        in {
-            out_string("Please enter your name:\n");
-            name <- in_string();
-            out_string(hello.concat(name.concat(ending)));
-        }
-    };
-};'''
+arquivo = open('programa.cl', 'r')
+data = arquivo.read()
+arquivo.close()
 
 lexer = lex.lex()
 lexer.input(data)
@@ -110,3 +106,4 @@ while True:
   if not tok:
     break
   print(tok)
+
