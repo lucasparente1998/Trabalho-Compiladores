@@ -45,6 +45,8 @@ tokens = [
   'FECHACHAVES'
 ] + list(keywords.values())
 
+
+
 t_MAIS = r'\+'
 t_MENOS = r'\-'
 t_MULTIPLICACAO = r'\*'
@@ -81,11 +83,11 @@ def t_STRING(t):
     return t
 
 def t_COMMENT_BLOCO (t):
-    r'\(\*[^*][^)]*\*\)'
+    r'(\(\*(.|\n)*?\*\))'
 
 def t_COMMENT_LINHA (t):
     r'\-\-[^-][^-]*\-\-'
-    
+
 def t_NOVALINHA(t):
 	r'\n+'
 	t.lexer.lineno += len(t.value)
@@ -95,8 +97,8 @@ def t_error(t):
     t.lexer.skip(1)
 
 ###################################################
-nome = input("Insira o nome do arquivo:\n")
-arquivo = open(nome, 'r')
+
+arquivo = open("programa3.cl", 'r')
 data = arquivo.read()
 arquivo.close()
 

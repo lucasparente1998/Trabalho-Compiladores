@@ -4,7 +4,9 @@ class Main inherits IO {
         out_string("Hello, world.\n");
         -- hahahahahahhaa --
         conta <- 8/4;
-        (* hahahahahhahaha *);
+        (* hahahahahhahaha
+         hello meu )penis
+         julio gato *)
         frase <- "Olá mundo";
     }
   } ;
