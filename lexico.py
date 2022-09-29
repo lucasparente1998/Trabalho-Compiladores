@@ -1,50 +1,52 @@
 import lex
 
 keywords = {
-  'class':'class',
-  'else': 'else',
-  'false': 'false',
-  'fi': 'fi',
-  'if': 'if',
-  'in': 'in',
-  'inherits': 'inherits',
-  'isvoid': 'isvoid',
-  'let': 'let',
-  'loop':'loop',
-  'pool':'poll',
-  'then':'then',
-  'while':'while',
-  'case':'case',
-  'esac':'esac',
-  'new':'new',
-  'of':'of',
-  'not':'not',
-  'true':'true'
+    'class': 'CLASS',
+    'else': 'ELSE',
+    'false': 'FALSE',
+    'fi': 'FI',
+    'if': 'IF',
+    'in': 'IN',
+    'inherits': 'INHERITS',
+    'isvoid': 'ISVOID',
+    'let': 'LET',
+    'loop': 'LOOP',
+    'pool': 'POOL',
+    'then': 'THEN',
+    'while': 'WHILE',
+    'case': 'CASE',
+    'esac': 'ESAC',
+    'new': 'NEW',
+    'of': 'OF',
+    'not': 'NOT',
+    'true': 'TRUE'
 }
 
 
 tokens = [
-  'ID',
-  'NUMERO',
-  'STRING',
-  'MAIS',
-  'MENOS',
-  'MULTIPLICACAO',
-  'DIVISAO',
-  'IGUAL',
-  'MENORIGUAL',
-  'MENOR',
-  'PONTO',
-  'DOISPONTOS',
-  'PONTOEVIRGULA',
-  'VIRGULA',
-  'ATRIBUICAO',
-  'ABREPARENTESES',
-  'FECHAPARENTESES',
-  'ABRECHAVES',
-  'FECHACHAVES'
+    'ID',
+    'NUMERO',
+    'STRING',
+    'MAIS',
+    'MENOS',
+    'MULTIPLICACAO',
+    'DIVISAO',
+    'IGUAL',
+    'MENORIGUAL',
+    'MENOR',
+    'PONTO',
+    'DOISPONTOS',
+    'PONTOEVIRGULA',
+    'VIRGULA',
+    'ATRIBUICAO',
+    'ABREPARENTESES',
+    'FECHAPARENTESES',
+    'ABRECHAVES',
+    'FECHACHAVES',
+    'COMPLEMENTO',
+    'ARROBA',
+    'SETA'
 ] + list(keywords.values())
-
 
 
 t_MAIS = r'\+'
@@ -63,34 +65,44 @@ t_ABREPARENTESES = r'\('
 t_FECHAPARENTESES = r'\)'
 t_ABRECHAVES = r'\{'
 t_FECHACHAVES = r'\}'
+t_COMPLEMENTO = r'\~'
+t_ARROBA = r'\@'
+t_SETA = r'\=\>'
 
 t_ignore = ' \t'
 
+
 def t_ID(t):
-	r'[a-zA-z_][a-zA-Z_0-9]*'
-	if t.value in keywords:
-	    t.type = t.value.upper()
-	else:
-	    t.type = 'ID'
-	return t
+    r'[a-zA-z_][a-zA-Z_0-9]*'
+    if t.value in keywords:
+        t.type = t.value.upper()
+    else:
+        t.type = 'ID'
+    return t
+
 
 def t_NUMERO(t):
-	r'\d+'
-	return t
+    r'\d+'
+    return t
+
 
 def t_STRING(t):
     r'\"[^"]*\"'
     return t
 
-def t_COMMENT_BLOCO (t):
+
+def t_COMMENT_BLOCO(t):
     r'(\(\*(.|\n)*?\*\))'
 
-def t_COMMENT_LINHA (t):
+
+def t_COMMENT_LINHA(t):
     r'\-\-[^-][^-]*\-\-'
 
+
 def t_NOVALINHA(t):
-	r'\n+'
-	t.lexer.lineno += len(t.value)
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
 
 def t_error(t):
     print(f'Caractere ilegal {t.value[0]!r}')
@@ -98,15 +110,5 @@ def t_error(t):
 
 ###################################################
 
-arquivo = open("programa3.cl", 'r')
-data = arquivo.read()
-arquivo.close()
 
 lexer = lex.lex()
-lexer.input(data)
-while True:
-  tok = lexer.token()
-  if not tok:
-    break
-  print(tok)
-

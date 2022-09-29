@@ -19,7 +19,7 @@ test exercise:
 Because the sort used is a quadratic space insertion sort, sorting
 moderately large lists can be quite slow. *)
 
-Class List inherits IO { 
+class List inherits IO { 
  (* Since abort() returns Object, we need something of
 	 type Bool at the end of the block to satisfy the typechecker. 
  This code is unreachable, since abort() halts the program. *)
@@ -51,8 +51,8 @@ Class List inherits IO {
 	print_list() : Object { abort() };
 };
 
-Class Cons inherits List {
-	xcar : Int; -- We keep the car in cdr in attributes.
+class Cons inherits List {
+	xcar : Int; -- We keep the car in cdr in attributes. --
 	xcdr : List; 
 
 	isNil() : Bool { false };
@@ -68,3 +68,4 @@ Class Cons inherits List {
 	car() : Int { xcar };
 
 	cdr() : List { xcdr };
+    };
