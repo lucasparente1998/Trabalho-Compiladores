@@ -93,10 +93,11 @@ def t_STRING(t):
 
 def t_COMMENT_BLOCO(t):
     r'(\(\*(.|\n)*?\*\))'
-
+    t.lexer.lineno += t.value.count('\n')
 
 def t_COMMENT_LINHA(t):
     r'\-\-[^-][^-]*\-\-'
+    
 
 
 def t_NOVALINHA(t):

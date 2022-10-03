@@ -18,17 +18,17 @@ def p_cs(p):
     pass
 
 def p_featurelist(p):
-    '''featurelist : featurelist feature PONTOEVIRGULA
+    '''featurelist : featurelist feature 
      | empty'''
     pass
 
 def p_feature_1(p):
-    'feature : ID ABREPARENTESES formallist FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES'
+    'feature : ID ABREPARENTESES formallist FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES PONTOEVIRGULA'
     pass
 
 def p_feature_2(p):
-    '''feature : ID DOISPONTOS ID
-     | ID DOISPONTOS ID ATRIBUICAO expr
+    '''feature : ID DOISPONTOS ID PONTOEVIRGULA
+     | ID DOISPONTOS ID ATRIBUICAO expr PONTOEVIRGULA
      | empty'''
 
 def p_formallist(p):
