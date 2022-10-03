@@ -5,7 +5,7 @@ class Main inherits IO {
         -- hahahahahahhaa --
         conta <- 8/4;
         (* hahahahahhahaha
-         hello meu )penis
+         hello meu )
          julio gato *)
         frase <- "Olá mundo";
     }

@@ -4,9 +4,9 @@ from ply.yacc import yacc
 VERBOSE = 1
 
 def p_program(p):
-    '''program : classlist 
-     | empty'''
+    'program : classlist'
     pass
+
 def p_classlist(p):
     '''classlist : classlist cs PONTOEVIRGULA
      | cs PONTOEVIRGULA'''
@@ -74,22 +74,6 @@ def p_expr(p):
      | FALSE'''
     pass
 
-# def p_expr_2(p):
-#     '''expr : expr PONTO ID ABREPARENTESES FECHAPARENTESES
-#      | expr ARROBA ID PONTO ID ABREPARENTESES FECHAPARENTESES
-#      | expr ARROBA ID PONTO ID ABREPARENTESES exprlist FECHAPARENTESES
-#      | expr PONTO ID ABREPARENTESES exprlist FECHAPARENTESES '''
-#     pass
-# def p_expr_3(p):
-#     '''expr : ID ABREPARENTESES FECHAPARENTESES
-#      | ID ABREPARENTESES exprlist FECHAPARENTESES'''
-#     pass
-
-# def p_expr_4(p):
-#     '''expr : LET ID DOISPONTOS ID exprlistlet IN expr
-#      | LET ID DOISPONTOS ID ATRIBUICAO exprlistlet IN expr'''
-#     pass
-
 def p_exprlista(p):
     '''exprlista : exprlista expr PONTOEVIRGULA
      | expr PONTOEVIRGULA'''
@@ -128,10 +112,8 @@ def p_empty(p):
 
 def p_error(p):
     if VERBOSE:
-        if p is not None:
-            print ("Error no Sintatico linha:" + str(lexer.lineno)+"  Error de Contexto " + str(p.value))
-        else:
-            print ("Error no Lexico linha: " + str(lexer.lineno))
+        print ("Error no Sintatico linha:" + str(lexer.lineno)+ " .Token " + str(p.value) + " diferente do esperado. ")
+      
     else:
         raise Exception('Syntax', 'error')
 
