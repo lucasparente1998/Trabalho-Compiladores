@@ -5,105 +5,222 @@ VERBOSE = 1
 
 def p_program(p):
     'program : classlist'
+    p[0] = [p[1]]
     pass
 
 def p_classlist(p):
     '''classlist : classlist cs PONTOEVIRGULA
      | cs PONTOEVIRGULA'''
+
+    if len(p) == 3:
+        p[0] = [p[1]]
+    else: 
+        p[0] = p[1]
+        p[0].append(p[2])
     pass
 
 def p_cs(p):
     '''cs : CLASS ID ABRECHAVES featurelist FECHACHAVES
      | CLASS ID INHERITS ID ABRECHAVES featurelist FECHACHAVES'''
+    if len(p) == 6:
+        p[0] = ('cs', p[2], p[4])
+    else:
+        p[0] = ('csInh', p[2], p[4], p[6])
     pass
 
 def p_featurelist(p):
     '''featurelist : featurelist feature 
      | empty'''
+    
+    if len(p) == 2:
+        p[0] = None
+    else:
+        p[0] = [p[1]]
+        p[0].append(p[2])
     pass
 
 def p_feature_1(p):
     'feature : ID ABREPARENTESES formallist FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES PONTOEVIRGULA'
+    p[0] = ('featureParametro', p[1], p[3], p[6], p[8])
     pass
 
 def p_feature_2(p):
     '''feature : ID DOISPONTOS ID PONTOEVIRGULA
      | ID DOISPONTOS ID ATRIBUICAO expr PONTOEVIRGULA
      | empty'''
+    if len(p) == 5:
+        p[0] = ('featureDeclaration', p[1],p[3])
+    elif len(p) == 7:
+        p[0] = ('featureAnonimos', p[1], p[3], p[5])
+    else:
+        p[0] = None
+    pass
 
 def p_formallist(p):
     '''formallist : formallist VIRGULA formal
      | empty
      | formal'''
+    if len(p) == 4:
+        p[0] = p[1]
+        p[0].append(p[3])
+    elif len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = None
     pass
 
 def p_formal(p):
     'formal : ID DOISPONTOS ID'
+    p[0] = ('formal', p[1], p[3])
     pass
 
-def p_expr(p):
-    '''expr : ID ATRIBUICAO expr
-     | expr PONTO ID ABREPARENTESES FECHAPARENTESES
-     | expr ARROBA ID PONTO ID ABREPARENTESES FECHAPARENTESES
-     | expr ARROBA ID PONTO ID ABREPARENTESES exprlist FECHAPARENTESES
-     | expr PONTO ID ABREPARENTESES exprlist FECHAPARENTESES
-     | ID ABREPARENTESES FECHAPARENTESES
-     | ID ABREPARENTESES exprlist FECHAPARENTESES
-     | IF expr THEN expr ELSE expr FI
-     | WHILE expr LOOP expr POOL
-     | ABRECHAVES exprlista FECHACHAVES
-     | LET ID DOISPONTOS ID exprlistlet IN expr
-     | LET ID DOISPONTOS ID ATRIBUICAO expr exprlistlet IN expr
-     | CASE expr OF exprlistcase ESAC
-     | NEW ID
-     | ISVOID expr
-     | expr MAIS expr
-     | expr MENOS expr 
-     | expr MULTIPLICACAO expr
-     | expr DIVISAO expr
+def p_expr_ValNotVoid(p):
+    '''expr :  ISVOID expr
      | COMPLEMENTO expr
-     | expr MENOR expr
-     | expr MENORIGUAL expr
-     | expr IGUAL expr
      | NOT expr
-     | ABREPARENTESES expr FECHAPARENTESES
+     | NEW ID
      | ID
      | NUMERO
      | STRING
      | TRUE
      | FALSE'''
+    if len(p) == 2:
+        p[0] = ('expValor',p[1])
+    elif len(p) == 3:
+        p[0] = ('expNotVoidCompNew', p[1], p[2])
+    pass
+
+def p_expr_comp(p):
+    '''expr : expr MENOR expr
+     | expr MENORIGUAL expr
+     | expr IGUAL expr'''
+    p[0] = ('comp',p[2], p[1], p[3])
+    pass
+
+def p_expr_oper(p):
+    '''expr : expr MAIS expr
+     | expr MENOS expr 
+     | expr MULTIPLICACAO expr
+     | expr DIVISAO expr'''
+    p[0] = ('oper',p[2], p[1], p[3])
+    pass
+
+def p_expr_atri(p):
+    'expr : ID ATRIBUICAO expr'
+    p[0] = ('exprAtri', p[1], p[2], p[3])
+    pass
+
+def p_expr_par(p):
+    'expr : ABREPARENTESES expr FECHAPARENTESES'
+    p[0] = ('exprpar', p[2])
+    pass
+
+def p_expr_arroba(p):
+    '''expr : expr ARROBA ID PONTO ID ABREPARENTESES exprlist FECHAPARENTESES
+     | expr PONTO ID ABREPARENTESES exprlist FECHAPARENTESES'''
+
+    if len(p) == 7:
+        p[0] = ('exp', p[1],p[3],p[5])
+    else:
+        p[0] = ('exprArroba',p[1], p[3], p[5], p[7])
+    pass
+
+def p_expr_id(p):
+    'expr : ID ABREPARENTESES exprlist FECHAPARENTESES'
+    p[0] = ('exprChamaMetodo', p[1], p[3])
+    pass
+
+def p_expr_if(p):
+    'expr : IF expr THEN expr ELSE expr FI'
+    p[0] = ('exprIf', p[2], p[4], p[6])
+    pass
+
+def p_expr_while(p):
+    'expr : WHILE expr LOOP expr POOL'
+    p[0] = ('exprWhile', p[2], p[4])
+    pass
+
+def p_expr_lista(p):
+    'expr : ABRECHAVES exprlista FECHACHAVES'
+    p[0] = ('exprLista',p[2])
+    pass
+
+def p_expr_let(p):
+    '''expr : LET ID DOISPONTOS ID exprlistlet IN expr
+     | LET ID DOISPONTOS ID ATRIBUICAO expr exprlistlet IN expr'''
+
+    if len(p) == 8:
+        p[0] = ('exprLet', p[2], p[4], p[5], p[7])
+    else:
+        p[0] = ('exprLet2', p[2], p[4], p[6], p[7], p[9])
+    pass
+
+def p_expr_case(p):
+    'expr : CASE expr OF exprlistcase ESAC'
+    p[0] = ('exprCase', p[2], p[4])
     pass
 
 def p_exprlista(p):
     '''exprlista : exprlista expr PONTOEVIRGULA
      | expr PONTOEVIRGULA'''
+    if len(p) == 3:
+        p[0] = p[1]
+    else:
+        p[0] = p[1]
+        p[0].append(p[2])
     pass
 
 def p_exprlist(p):
     '''exprlist : exprlist VIRGULA expr
-     | empty
-     | expr'''
+     | expr
+     | empty'''
+    
+    if len(p) == 4:
+        p[0] = p[1]
+        p[0].append(p[3])
+    elif len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = None
     pass
 
 def p_exprlistlet(p):
     '''exprlistlet : exprlistlet letexpr  
      | letexpr'''
+    if len(p) == 3:
+        p[0] = p[1]
+        p[0].append(p[2])
+    else:
+        p[0] = [p[1]]
     pass
 
 def p_letexpr(p):
     '''letexpr : VIRGULA ID DOISPONTOS ID 
      | VIRGULA ID DOISPONTOS ID ATRIBUICAO expr
      | empty'''
+    
+    if len(p) == 5:
+        p[0] = ('exprType', p[2], p[4])
+    elif len(p) == 7:
+        p[0] = ('exprType2', p[2], p[4],p[6])
+    else:
+        p[0] = None
     pass
 
 
 def p_exprlistcase(p):
     '''exprlistcase : exprlistcase exprcase
      | exprcase'''
-    pass
+    if len(p) == 3:
+        p[0] = p[1]
+        p[0].append(p[2])
+    else:
+        p[0] = [p[1]]
+    pass 
 
 def p_exprcase(p):
     'exprcase : ID DOISPONTOS ID SETA expr PONTOEVIRGULA'
+    p[0] = ('exprcase', p[1], p[3], p[5])
     pass
 
 def p_empty(p):
