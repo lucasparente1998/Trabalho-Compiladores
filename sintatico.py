@@ -242,6 +242,6 @@ data = f.read()
 #"print (data)
 #parser.parse(data, tracking=True)
 analisador = parser.parse(data, lexer=lexer)
-print(aux)
+
 
 
