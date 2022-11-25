@@ -94,7 +94,7 @@ def p_expr_comp(p):
     '''expr : expr MENOR expr
      | expr MENORIGUAL expr
      | expr IGUAL expr'''
-    p[0] = ('comp',p[2], p[1], p[3])
+    p[0] = ('exprComp',p[2], p[1], p[3])
     pass
 
 def p_expr_oper(p):
@@ -102,7 +102,7 @@ def p_expr_oper(p):
      | expr MENOS expr 
      | expr MULTIPLICACAO expr
      | expr DIVISAO expr'''
-    p[0] = ('oper',p[2], p[1], p[3])
+    p[0] = ('exprOper',p[2], p[1], p[3])
     pass
 
 def p_expr_atri(p):
@@ -112,7 +112,7 @@ def p_expr_atri(p):
 
 def p_expr_par(p):
     'expr : ABREPARENTESES expr FECHAPARENTESES'
-    p[0] = ('exprpar', p[2])
+    p[0] = ('exprPar', p[2])
     pass
 
 def p_expr_arroba(p):
@@ -120,7 +120,7 @@ def p_expr_arroba(p):
      | expr PONTO ID ABREPARENTESES exprlist FECHAPARENTESES'''
 
     if len(p) == 7:
-        p[0] = ('exp', p[1],p[3],p[5])
+        p[0] = ('expr', p[1],p[3],p[5])
     else:
         p[0] = ('exprArroba',p[1], p[3], p[5], p[7])
     pass
@@ -220,7 +220,7 @@ def p_exprlistcase(p):
 
 def p_exprcase(p):
     'exprcase : ID DOISPONTOS ID SETA expr PONTOEVIRGULA'
-    p[0] = ('exprcase', p[1], p[3], p[5])
+    p[0] = ('exprCase', p[1], p[3], p[5])
     pass
 
 def p_empty(p):
@@ -236,7 +236,7 @@ def p_error(p):
 
 parser = yacc()
 
-fin = 'programa3.cl'
+fin = 'programa.cl'
 f = open(fin,'r')
 data = f.read()
 #"print (data)
