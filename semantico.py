@@ -23,4 +23,4 @@ def percorrerArv(t):
         for son in t:
             percorrerArv(son)
         print(t[0])
-print(analisador)
+#print(analisador)
