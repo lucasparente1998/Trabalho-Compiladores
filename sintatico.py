@@ -164,7 +164,7 @@ def p_exprlista(p):
     '''exprlista : exprlista expr PONTOEVIRGULA
      | expr PONTOEVIRGULA'''
     if len(p) == 3:
-        p[0] = p[1]
+        p[0] = [p[1]]
     else:
         p[0] = p[1]
         p[0].append(p[2])
