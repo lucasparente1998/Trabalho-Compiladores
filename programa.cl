@@ -1,9 +1,9 @@
 (* hashsahsah*sahhsahsa *)
 -- ahshsahsahsahshahsahsa --
-class Main inherits IO {
+class IO inherits IO2 {
     main(): Object {
         let hello:String <- "Hello, ",
-            name: String <- "",
+            name: String <- 10,
             ending: String <- "!\n"
         in {
             out_string("Please enter your name:\n");

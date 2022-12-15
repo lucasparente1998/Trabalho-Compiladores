@@ -322,17 +322,17 @@ def tratarExprSemArroba(t, IDs, Metodos, Tipos):
     nome = None
     NomeDoMetodo = None
     if t[1][0] == 'exprChamaMetodo':
-        nome = getMetodo(t[1][1], MetodosNovo)[2]
+        nome = getMetodo(t[1][1], Metodos)[2]
         NomeDoMetodo = t[1][1]
     else:
-        aux = getId(t[1][1], IDsNovo)
+        aux = getId(t[1][1], IDs)
         NomeDoMetodo = t[2][1]
         if aux != None:
             nome = aux[1]
     if nome != None:
-        tipo = getType(nome, TiposNovo)
+        tipo = getType(nome, Tipos)
         if nome == 'SELF_TYPE':
-            configSelfType(IDsNovo, MetodosNovo, TiposNovo)
+            configSelfType(IDs, Metodos, Tipos)
         if not isInListMetodo(NomeDoMetodo, tipo[2]):
             print("Erro Semântico: metodo %s não pertence ao tipo %s" % NomeDoMetodo, nome)
 
