@@ -141,21 +141,37 @@ def tratarCsInh( t, Tipos ):
     if inherits == None:
         print("Erro Semântico: Tipo '%s' não declarado" % t[2])
     else:
-        for method in inherits[2]:
-            classe[2].append(method)
+        for metodo in inherits[2]:
+            classe[2].append(metodo)
         for id in inherits[3]:
             classe[3].append(id)
 
-def tratarFeatureReturn( t, MethodList, Tipos ):
-    if isInListMetodo(t[1], MethodList):
-        print("Erro Semântico: method %s já declarado" % t[1])
-    if not isInListType(t[2], Tipos):
-        print("Erro Semântico: tipo %s não foi declarado" % t[2])
-    method = (t[1], [], t[2])
+def tratarFeatureParametro( t, IDs, Metodos, Tipos ):
+    if isInListMetodo(t[1], Metodos):
+        print("Erro Semântico: método %s já declarado" % t[1])
+    if not isInListType(t[3], Tipos):
+        print("Erro Semântico: tipo %s não foi declarado" % t[3])
+    verificaParametro(t[2], Tipos)
+    metodo = (t[1], [], t[3])
     tipo = getType(scope, Tipos)
     if tipo != None:
-        tipo[2].append(method)
-    MethodList.append(method)
+        tipo[2].append(metodo)
+    for id in t[2]:
+        newId = (id[1], id[2])
+        IDsList.append(newId)
+        metodo[1].append(newId)
+    Metodos.append(metodo)
+
+def tratarFeatureReturn( t, Metodos, Tipos ):
+    if isInListMetodo(t[1], Metodos):
+        print("Erro Semântico: método %s já declarado" % t[1])
+    if not isInListType(t[2], Tipos):
+        print("Erro Semântico: tipo %s não foi declarado" % t[2])
+    metodo = (t[1], [], t[2])
+    tipo = getType(scope, Tipos)
+    if tipo != None:
+        tipo[2].append(metodo)
+    Metodos.append(metodo)
 
 def tratarfeatureAnonimos( t, IDs, Tipos ):
     if isInListId(t[1], IDs):
@@ -348,16 +364,22 @@ def isInListId( item, lista ):
             return True
     return False
 
+def isInListMetodo( metodo, lista ):
+    for i in lista:
+        if metodo == i[0]:
+            return True
+    return False
+
 def getId( nome, lista ):
     for item in lista:
         if item[0] == nome:
             return item
     return None
 
-def getMetodo( nome, MethodList ):
-    for method in MethodList:
-        if nome == method[0]:
-            return method
+def getMetodo( nome, Metodos ):
+    for metodo in Metodos:
+        if nome == metodo[0]:
+            return metodo
     return None
 
 def getType( nome, Tipos ):
@@ -381,12 +403,6 @@ def tryConvertInt( s ):
         return int(s)
     except:
         return s
-
-def isInListMetodo( metodo, lista ):
-    for i in lista:
-        if metodo == i[0]:
-            return True
-    return False
 
 def verificaParametro( parametros, Tipos ):
     idsParametros = []
