@@ -76,26 +76,39 @@ def p_formal(p):
     p[0] = ('formal', p[1], p[3])
     pass
 
-def p_expr_ValNotVoid(p):
-    '''expr :  ISVOID expr
-     | COMPLEMENTO expr
-     | NOT expr
-     | NEW ID
-     | ID
-     | NUMERO
-     | STRING
-     | TRUE
-     | FALSE'''
-    if len(p) == 2:
-        p[0] = ('exprValor',p[1])
-    elif p[1] == 'NOT':
-        p[0] = ('exprNot', p[1], p[2])
-    elif p[1] == 'ISVOID':
-        p[0] = ('exprIsVoid', p[1], p[2])
-    elif p[1] == 'COMPLEMENTO' or p[1] == 'NEW':
-        p[0] = ('exprNew', p[1], p[2])
+def p_expr_novo(p):
+    'expr : NEW ID'
+    p[0] = ('exprNew', p[1], p[2])
     pass
 
+def p_expr_void(p):
+    'expr : ISVOID expr'
+    p[0] = ('exprIsVoid', p[1], p[2])
+    pass
+
+def p_ex_not_comp(p):
+    '''expr : NOT expr
+            | COMPLEMENTO expr '''
+    p[0] = ('exprNot', p[1], p[2])
+    pass
+
+def p_ex_1(p):
+    '''expr : STRING
+            | TRUE
+            | FALSE
+            '''
+    p[0] = ('exprValor', p[1])
+    pass
+
+def p_ex_num(p):
+    'expr : NUMERO'
+    p[0] = ('expValor', tryParseInt(p[1]))
+    pass
+
+def p_ex_id(p):
+    'expr : ID'
+    p[0] = ('exprID', p[1])
+    pass
 def p_expr_comp(p):
     '''expr : expr MENOR expr
      | expr MENORIGUAL expr
@@ -127,7 +140,7 @@ def p_expr_arroba(p):
     if len(p) == 9:
         p[0] = ('exprArroba', p[1], p[3], p[5])
     else:
-        p[0] = ('exprArroba', p[1], p[3])
+        p[0] = ('exprSemArroba', p[1], p[3])
     pass
 
 def p_expr_id(p):
@@ -232,6 +245,12 @@ def p_empty(p):
     'empty :'
     pass
 
+def tryParseInt(s):
+    try:
+        return int(s)
+    except:
+        return s
+
 def p_error(p):
     if VERBOSE:
         print ("Error no Sintatico linha:" + str(lexer.lineno)+ " .Token " + str(p.value) + " diferente do esperado. ")
@@ -241,7 +260,7 @@ def p_error(p):
 
 parser = yacc()
 
-fin = 'hello.cl'
+fin = 'helloworld.cl'
 f = open(fin,'r')
 data = f.read()
 analisador = parser.parse(data, lexer=lexer)

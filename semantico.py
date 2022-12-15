@@ -71,14 +71,14 @@ def identificar( t, IDs, Metodos, Tipos ):
             else:
                 identificar(formal, IDsNovo, MetodosNovo, TiposNovo)
     elif t[0] == 'featureParametro':
-        traducao = traducao + featureParametro(t)
+        #traducao = traducao + featureParametro(t)
         tratarFeatureParametro(t, IDsNovo, MetodosNovo, TiposNovo)
         for formal in t[4]:
             identificar(formal, IDsNovo, MetodosNovo, TiposNovo)
     elif t[0] == 'featureReturn':
         tratarFeatureReturn(t, MetodosNovo, TiposNovo)
         identificar(t[3], IDsNovo, MetodosNovo, TiposNovo)
-        traducao = traducao + featureClass(t)
+        #traducao = traducao + featureClass(t)
     elif t[0] == 'feature':
         tratarfeatureAnonimos(t, IDsNovo, TiposNovo)
         for formal in t[2]:
@@ -95,6 +95,8 @@ def identificar( t, IDs, Metodos, Tipos ):
         tratarExprVoid(t, IDsNovo)
     elif t[0] == 'exprNot':
         tratarExprNot(t, IDsNovo)
+    elif t[0] == 'exprID':
+        tratarExprId(t, IDsNovo)
     elif t[0] == 'comp':
         tratarComp(t, IDsNovo)
     elif t[0] == 'oper':
@@ -226,15 +228,19 @@ def tratarExprNot( t, IDs ):
         return
     print("Erro Semântico: expressão %s não é booleano" % t[2])
 
+def tratarExprId( t, IDs ):
+    if not isInListId(t[1], IDs):
+        print("Erro de declaração: %s não foi declarado" % t[1])
+
 def tratarComp( t, IDs ):
-    if t[2][0] == 'exprNotVoidCompNew':
+    if t[2][0] == 'exprNot':
         id1 = getId(t[2][2][1], IDs)
     elif t[2][0] == 'oper':
         tratarOper(t[2], IDs)
         id1 = (0, 'Int')
     else:
         id1 = getId(t[2][1], IDs)
-    if t[3][0] == 'exprNotVoidCompNew':
+    if t[3][0] == 'exprNot':
         id2 = getId(t[3][2][1], IDs)
     elif t[3][0] == 'oper':
         tratarOper(t[3], IDs)
@@ -339,7 +345,7 @@ def tratarExprArroba(t, IDs, Metodos, Tipos):
         if nome == 'SELF_TYPE':
             configSelfType(IDs, Metodos, Tipos)
         if not isInListMetodo(t[2][1], tipo[2]):
-            print("Erro Semântico: metodo %s não pertence ao tipo %s" % NomeDoMetodo, nome)
+            print("Erro Semântico: metodo %s não pertence ao tipo %s" % (NomeDoMetodo, nome))
 
 def tratarExprSemArroba(t, IDs, Metodos, Tipos):
     nome = None
@@ -459,4 +465,4 @@ for filho in analisador[0]:
 for filho in analisador[0]:
     identificar(filho, IDs, Metodos, Tipos)
 
-print(traducao)
+#print(traducao)
