@@ -88,8 +88,12 @@ def p_expr_ValNotVoid(p):
      | FALSE'''
     if len(p) == 2:
         p[0] = ('exprValor',p[1])
-    elif len(p) == 3:
-        p[0] = ('exprNotVoidCompNew', p[1], p[2])
+    elif p[1] == 'NOT':
+        p[0] = ('exprNot', p[1], p[2])
+    elif p[1] == 'ISVOID':
+        p[0] = ('exprIsVoid', p[1], p[2])
+    elif p[1] == 'COMPLEMENTO' or p[1] == 'NEW':
+        p[0] = ('exprNew', p[1], p[2])
     pass
 
 def p_expr_comp(p):

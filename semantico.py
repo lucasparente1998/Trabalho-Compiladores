@@ -89,11 +89,11 @@ def identificar( t, IDs, Metodos, Tipos ):
         tratarFormal(t, IDsNovo, TiposNovo)
     elif t[0] == 'exprValor':
         tratarExprValor(t, IDsNovo)
-    elif t[0] == 'exprNotVoidCompNew':
+    elif t[0] == 'exprNew':
         tratarExprNew(t, IDsNovo)
-    elif t[0] == 'exprNotVoidCompNew':
+    elif t[0] == 'exprIsVoid':
         tratarExprVoid(t, IDsNovo)
-    elif t[0] == 'exprNotVoidCompNew':
+    elif t[0] == 'exprNot':
         tratarExprNot(t, IDsNovo)
     elif t[0] == 'comp':
         tratarComp(t, IDsNovo)
