@@ -1,6 +1,8 @@
 from lexico import tokens, lexer
 from ply.yacc import yacc
 
+
+
 VERBOSE = 1
 
 def p_program(p):
@@ -11,7 +13,6 @@ def p_program(p):
 def p_classlist(p):
     '''classlist : classlist cs PONTOEVIRGULA
      | cs PONTOEVIRGULA'''
-
     if len(p) == 3:
         p[0] = [p[1]]
     else: 
@@ -29,7 +30,7 @@ def p_cs(p):
     pass
 
 def p_featurelist(p):
-    '''featurelist : featurelist feature 
+    '''featurelist : featurelist feature PONTOEVIRGULA
      | empty'''
     
     if len(p) == 2:
@@ -39,20 +40,21 @@ def p_featurelist(p):
         p[0].append(p[2])
     pass
 
-def p_feature_1(p):
-    'feature : ID ABREPARENTESES formallist FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES PONTOEVIRGULA'
-    p[0] = ('featureParametro', p[1], p[3], p[6], p[8])
-    pass
-
-def p_feature_2(p):
-    '''feature : ID DOISPONTOS ID PONTOEVIRGULA
-     | ID DOISPONTOS ID ATRIBUICAO expr PONTOEVIRGULA
-     | empty'''
-    if len(p) == 5:
-        p[0] = ('featureDeclaration', p[1],p[3])
-    elif len(p) == 7:
-        p[0] = ('featureAnonimos', p[1], p[3], p[5])
-    else:
+def p_feature(p):
+    '''feature : ID ABREPARENTESES formallist FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES 
+                | ID ABREPARENTESES FECHAPARENTESES DOISPONTOS ID ABRECHAVES expr FECHACHAVES
+                | ID DOISPONTOS ID ATRIBUICAO expr 
+                | ID DOISPONTOS ID 
+                | empty'''
+    if len(p) == 10:
+        p[0] = ('featureParametro',p[1],p[3],p[6],p[8])
+    elif len(p) == 9:
+        p[0] = ('featureReturn',p[1],p[5],p[7])
+    elif len(p) == 6:
+        p[0] = ('featureAnonimos',p[1],p[3],p[5])
+    elif len(p) == 4:
+        p[0] = ('featureDeclaration',p[1],p[3])
+    elif len(p) == 2:
         p[0] = None
     pass
 
@@ -85,16 +87,16 @@ def p_expr_ValNotVoid(p):
      | TRUE
      | FALSE'''
     if len(p) == 2:
-        p[0] = ('expValor',p[1])
+        p[0] = ('exprValor',p[1])
     elif len(p) == 3:
-        p[0] = ('expNotVoidCompNew', p[1], p[2])
+        p[0] = ('exprNotVoidCompNew', p[1], p[2])
     pass
 
 def p_expr_comp(p):
     '''expr : expr MENOR expr
      | expr MENORIGUAL expr
      | expr IGUAL expr'''
-    p[0] = ('exprComp',p[2], p[1], p[3])
+    p[0] = ('comp',p[2], p[1], p[3])
     pass
 
 def p_expr_oper(p):
@@ -102,7 +104,7 @@ def p_expr_oper(p):
      | expr MENOS expr 
      | expr MULTIPLICACAO expr
      | expr DIVISAO expr'''
-    p[0] = ('exprOper',p[2], p[1], p[3])
+    p[0] = ('oper',p[2], p[1], p[3])
     pass
 
 def p_expr_atri(p):
@@ -112,17 +114,16 @@ def p_expr_atri(p):
 
 def p_expr_par(p):
     'expr : ABREPARENTESES expr FECHAPARENTESES'
-    p[0] = ('exprPar', p[2])
+    p[0] = ('exprpar', p[2])
     pass
 
 def p_expr_arroba(p):
-    '''expr : expr ARROBA ID PONTO ID ABREPARENTESES exprlist FECHAPARENTESES
-     | expr PONTO ID ABREPARENTESES exprlist FECHAPARENTESES'''
-
-    if len(p) == 7:
-        p[0] = ('expr', p[1],p[3],p[5])
+    '''expr : expr ARROBA ID PONTO expr
+            | expr PONTO expr '''
+    if len(p) == 9:
+        p[0] = ('exprArroba', p[1], p[3], p[5])
     else:
-        p[0] = ('exprArroba',p[1], p[3], p[5], p[7])
+        p[0] = ('exprArroba', p[1], p[3])
     pass
 
 def p_expr_id(p):
@@ -202,7 +203,7 @@ def p_letexpr(p):
     if len(p) == 5:
         p[0] = ('exprType', p[2], p[4])
     elif len(p) == 7:
-        p[0] = ('exprType2', p[2], p[4],p[6])
+        p[0] = ('exprType', p[2], p[4],p[6])
     else:
         p[0] = None
     pass
@@ -220,7 +221,7 @@ def p_exprlistcase(p):
 
 def p_exprcase(p):
     'exprcase : ID DOISPONTOS ID SETA expr PONTOEVIRGULA'
-    p[0] = ('exprCase', p[1], p[3], p[5])
+    p[0] = ('exprcase', p[1], p[3], p[5])
     pass
 
 def p_empty(p):
@@ -239,10 +240,7 @@ parser = yacc()
 fin = 'programa.cl'
 f = open(fin,'r')
 data = f.read()
-#"print (data)
-#parser.parse(data, tracking=True)
 analisador = parser.parse(data, lexer=lexer)
-
 
 
 
