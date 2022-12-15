@@ -1,6 +1,6 @@
 (* hashsahsah*sahhsahsa *)
 -- ahshsahsahsahshahsahsa --
-class IO inherits IO2 {
+class Main inherits IO {
     main(): Object {
         let hello:String <- "Hello, ",
             name: String <- 10,

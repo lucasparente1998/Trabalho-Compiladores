@@ -51,7 +51,7 @@ def p_feature(p):
     elif len(p) == 9:
         p[0] = ('featureReturn',p[1],p[5],p[7])
     elif len(p) == 6:
-        p[0] = ('featureAnonimos',p[1],p[3],p[5])
+        p[0] = ('feature',p[1],p[3],p[5])
     elif len(p) == 4:
         p[0] = ('featureDeclaration',p[1],p[3])
     elif len(p) == 2:
@@ -237,7 +237,7 @@ def p_error(p):
 
 parser = yacc()
 
-fin = 'programa.cl'
+fin = 'hello.cl'
 f = open(fin,'r')
 data = f.read()
 analisador = parser.parse(data, lexer=lexer)

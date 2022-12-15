@@ -1,5 +1,6 @@
 from sintatico import analisador
 import copy
+from geracao_de_codigo import *
 
 Tipos = [('Object', None, [
                 ('abort', [], 'Object'),
@@ -22,6 +23,8 @@ Tipos = [('Object', None, [
 Metodos = []
 IDs = []
 
+traducao = ''
+
 scope = 'program'
 
 for tipo in Tipos:
@@ -40,6 +43,8 @@ def identificar( t, IDs, Metodos, Tipos ):
     IDsNovo = []
     MetodosNovo = []
     TiposNovo = Tipos
+
+    global traducao
 
     if EhClasse(t[0]):
         global scope
@@ -66,13 +71,15 @@ def identificar( t, IDs, Metodos, Tipos ):
             else:
                 identificar(formal, IDsNovo, MetodosNovo, TiposNovo)
     elif t[0] == 'featureParametro':
+        traducao = traducao + featureParametro(t)
         tratarFeatureParametro(t, IDsNovo, MetodosNovo, TiposNovo)
         for formal in t[4]:
             identificar(formal, IDsNovo, MetodosNovo, TiposNovo)
     elif t[0] == 'featureReturn':
         tratarFeatureReturn(t, MetodosNovo, TiposNovo)
         identificar(t[3], IDsNovo, MetodosNovo, TiposNovo)
-    elif t[0] == 'featureAnonimos':
+        traducao = traducao + featureClass(t)
+    elif t[0] == 'feature':
         tratarfeatureAnonimos(t, IDsNovo, TiposNovo)
         for formal in t[2]:
             identificar(formal, IDsNovo, MetodosNovo, TiposNovo)
@@ -158,7 +165,7 @@ def tratarFeatureParametro( t, IDs, Metodos, Tipos ):
         tipo[2].append(metodo)
     for id in t[2]:
         newId = (id[1], id[2])
-        IDsList.append(newId)
+        IDs.append(newId)
         metodo[1].append(newId)
     Metodos.append(metodo)
 
@@ -296,20 +303,20 @@ def tratarExprWhile( t, IDs ):
 def tratarExprLet( t, IDs, Tipos ):
     aux = ('featureDeclaration', t[1], t[2])
     tratarFeatureDeclaration(aux, IDs, Tipos)
-    for fanonima in t[3]:
-        if fanonima != None:
-            tratarExprCase(fanonima, IDs, Tipos)
+    for f in t[3]:
+        if f != None:
+            tratarExprCase(f, IDs, Tipos)
 
 def tratarExprType( t, IDs, Tipos ):
-    aux = ('featureAnonima', t[1], t[2])
+    aux = ('feature', t[1], t[2])
     tratarfeatureAnonimos(aux, IDs, Tipos)
-    for fanonima in t[3]:
-        if fanonima != None:
-            tratarExprCase(fanonima, IDs, Tipos)
+    for f in t[3]:
+        if f != None:
+            tratarExprCase(f, IDs, Tipos)
 
 def tratarExprCase( t, IDs, Tipos ):
     if len(t) == 4:
-        aux = ('featureAnonima', t[1], t[2], t[3])
+        aux = ('feature', t[1], t[2], t[3])
         tratarfeatureAnonimos(aux, IDs, Tipos)
     elif len(t) == 3:
         aux = ('featureDeclaration', t[1], t[2])
@@ -452,3 +459,4 @@ for filho in analisador[0]:
 for filho in analisador[0]:
     identificar(filho, IDs, Metodos, Tipos)
 
+print(traducao)
