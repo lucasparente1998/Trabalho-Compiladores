@@ -286,6 +286,7 @@ def tratarExprAtri( t, IDs ):
 def tratarExprChamaMetodo( t, Metodos, IDs ):
     if not isInListMetodo(t[1], Metodos):
         print("Erro Semântico: metodo %s não declarado" % t[1])
+    print(getMetodo(t[1], Metodos))
     verificaParametroCall(t[2], getMetodo(t[1], Metodos), IDs)
 
 def tratarExprIf( t, IDs ):
@@ -429,6 +430,7 @@ def verificaParametro( parametros, Tipos ):
 def verificaParametroCall( parametros, metodo, IDs ):
     if parametros[0] == None:
         del (parametros[0])
+    print(metodo)
     if len(parametros) != len(metodo[1]):
         print("Erro Semântico: metodo %s deve conter %d parametros" % metodo[0], len(metodo[1]))
     for i in range(0, len(parametros)):

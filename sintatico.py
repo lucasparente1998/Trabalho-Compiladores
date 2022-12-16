@@ -102,7 +102,7 @@ def p_ex_1(p):
 
 def p_ex_num(p):
     'expr : NUMERO'
-    p[0] = ('expValor', tryParseInt(p[1]))
+    p[0] = ('exprValor', tryParseInt(p[1]))
     pass
 
 def p_ex_id(p):
@@ -260,7 +260,7 @@ def p_error(p):
 
 parser = yacc()
 
-fin = 'programa3.cl'
+fin = 'hello.cl'
 f = open(fin,'r')
 data = f.read()
 analisador = parser.parse(data, lexer=lexer)
