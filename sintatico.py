@@ -260,7 +260,7 @@ def p_error(p):
 
 parser = yacc()
 
-fin = 'testes.cl'
+fin = 'programa3.cl'
 f = open(fin,'r')
 data = f.read()
 analisador = parser.parse(data, lexer=lexer)
