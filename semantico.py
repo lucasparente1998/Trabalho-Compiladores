@@ -286,7 +286,6 @@ def tratarExprAtri( t, IDs ):
 def tratarExprChamaMetodo( t, Metodos, IDs ):
     if not isInListMetodo(t[1], Metodos):
         print("Erro Semântico: metodo %s não declarado" % t[1])
-    print(getMetodo(t[1], Metodos))
     verificaParametroCall(t[2], getMetodo(t[1], Metodos), IDs)
 
 def tratarExprIf( t, IDs ):
