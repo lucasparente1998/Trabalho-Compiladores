@@ -429,7 +429,6 @@ def verificaParametro( parametros, Tipos ):
 def verificaParametroCall( parametros, metodo, IDs ):
     if parametros[0] == None:
         del (parametros[0])
-    print(metodo)
     if len(parametros) != len(metodo[1]):
         print("Erro Semântico: metodo %s deve conter %d parametros" % metodo[0], len(metodo[1]))
     for i in range(0, len(parametros)):
